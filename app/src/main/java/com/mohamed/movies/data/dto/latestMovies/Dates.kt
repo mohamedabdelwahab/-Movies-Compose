@@ -1,4 +1,4 @@
-package com.mohamed.movies.data.dto
+package com.mohamed.movies.data.dto.latestMovies
 
 
 import com.google.gson.annotations.SerializedName

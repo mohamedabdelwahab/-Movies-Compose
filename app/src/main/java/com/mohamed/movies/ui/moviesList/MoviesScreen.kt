@@ -3,26 +3,22 @@ package com.mohamed.movies.ui.moviesList
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mohamed.movies.R
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
 import com.mohamed.movies.ui.model.ProgressTypes
 import com.mohamed.movies.ui.moviesList.components.ErrorMessage
 import com.mohamed.movies.ui.moviesList.components.MoviesDefaultProgress
 import com.mohamed.movies.ui.moviesList.components.MoviesList
+import com.mohamed.movies.ui.moviesList.components.SearchBarWithPopupSuggestions
 import com.mohamed.movies.ui.moviesList.viewmodel.MoviesEvents
 import com.mohamed.movies.ui.moviesList.viewmodel.MoviesOneTimeAction
 import com.mohamed.movies.ui.moviesList.viewmodel.MoviesViewState
@@ -56,9 +52,15 @@ private fun MoviesContent(
     onEvent: (MoviesEvents) -> Unit,
 ) {
     Column(modifier = modifier) {
-        SearchBar(
-            searchText = moviesViewState.searchText,
-            onSearchChanged = { onEvent(MoviesEvents.OnSearchTextChanged(it)) }
+
+        SearchBarWithPopupSuggestions(
+            query = moviesViewState.searchText,
+            onQueryChanged = { onEvent(MoviesEvents.OnSearchQueryChanged(it)) },
+            suggestions = moviesViewState.searchSuggestions ?: arrayListOf(),
+            onMovieSelected = { onEvent(MoviesEvents.OnClickMovies(it)) },
+            onDismiss = { onEvent(MoviesEvents.OnDismissSearch) },
+            onSearchSubmit = {},
+            showSuggestions = moviesViewState.showSuggestions
         )
 
         MoviesPullToRefresh(
@@ -69,22 +71,6 @@ private fun MoviesContent(
             onBottomReached = { onEvent(MoviesEvents.OnLoadMoreMovies) }
         )
     }
-}
-
-@Composable
-fun SearchBar(
-    searchText: String,
-    onSearchChanged: (String) -> Unit
-) {
-    TextField(
-        value = searchText,
-        onValueChange = onSearchChanged,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        placeholder = { Text(stringResource(R.string.search_movies)) },
-        singleLine = true
-    )
 }
 
 

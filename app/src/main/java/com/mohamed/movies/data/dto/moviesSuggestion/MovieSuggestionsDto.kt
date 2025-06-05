@@ -1,19 +1,16 @@
-package com.mohamed.movies.data.dto
+package com.mohamed.movies.data.dto.moviesSuggestion
 
 
-import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-data class MoviesListResponseDto(
-    @SerializedName("dates")
-    @Expose
-    val dates: Dates? = null,
+data class MovieSuggestionsDto(
     @SerializedName("page")
     @Expose
     val page: Int? = null,
     @SerializedName("results")
     @Expose
-    val movieItems: List<MovieItem?>? = null,
+    val searchResultMovies: ArrayList<SearchResultMovie?>? = null,
     @SerializedName("total_pages")
     @Expose
     val totalPages: Int? = null,

@@ -1,8 +1,8 @@
 package com.mohamed.movies.data.remotedatasource
 
-import com.mohamed.movies.data.dto.MoviesListResponseDto
-import com.mohamed.movies.data.remote.MovieAPIInterface
-import com.mohamed.movies.domain.model.MoviesSearchModel
+import com.mohamed.movies.data.dto.latestMovies.MoviesListResponseDto
+import com.mohamed.movies.data.dto.moviesSuggestion.MovieSuggestionsDto
+import com.mohamed.movies.data.retrofit.MovieAPIInterface
 import javax.inject.Inject
 
 class MoviesRemoteDataSource @Inject constructor(
@@ -10,11 +10,21 @@ class MoviesRemoteDataSource @Inject constructor(
 ) : IMoviesRemoteDataSource {
 
     override suspend fun getLatestMoviesList(
-        moviesSearchModel: MoviesSearchModel
+        language: String,
+        page: Int
     ): MoviesListResponseDto {
         return movieApiInterface.getLatestMoviesList(
-            moviesSearchModel.page,
-            moviesSearchModel.language
+            page,
+            language
+        )
+    }
+
+    override suspend fun getSearchSuggestions(
+        query: String,
+        language: String
+    ): MovieSuggestionsDto {
+        return movieApiInterface.getSearchSuggestions(
+            query = query, language = language
         )
     }
 

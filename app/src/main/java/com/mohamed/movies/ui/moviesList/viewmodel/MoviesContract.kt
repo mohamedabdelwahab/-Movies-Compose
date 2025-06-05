@@ -13,7 +13,9 @@ data class MoviesViewState(
     val page: Int = 0,
     val progressTypes: ProgressTypes = ProgressTypes.NONE,
     val moviesList: ArrayList<MovieListItem>? = null,
+    val searchSuggestions: ArrayList<MovieListItem>? = null,
     val moviesErrorModel: Failure? = null,
+    val showSuggestions: Boolean = false,
 ) : UIState
 
 sealed class MoviesEvents : Event {
@@ -21,8 +23,17 @@ sealed class MoviesEvents : Event {
     data object OnPullToRefresh : MoviesEvents()
     data object OnClickRetry : MoviesEvents()
     data object OnLoadMoreMovies : MoviesEvents()
-    data class OnSearchTextChanged(val newText: String) : MoviesEvents()
+    data class OnSearchQueryChanged(val newText: String) : MoviesEvents()
     data class OnClickMovies(val movie: MovieListItem) :
+        MoviesEvents()
+
+    data class OnSuggestionSelected(val movie: MovieListItem) :
+        MoviesEvents()
+
+    data class OnSearchSubmit(val newText: String) :
+        MoviesEvents()
+
+    data object OnDismissSearch :
         MoviesEvents()
 }
 

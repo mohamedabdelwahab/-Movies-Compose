@@ -1,10 +1,10 @@
-package com.mohamed.movies.data.dto
+package com.mohamed.movies.data.dto.moviesSuggestion
 
 
 import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Expose
 
-data class MovieItem(
+data class SearchResultMovie(
     @SerializedName("adult")
     @Expose
     val adult: Boolean? = null,

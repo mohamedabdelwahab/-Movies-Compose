@@ -2,12 +2,14 @@ package com.mohamed.movies.ui.moviesList.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.mohamed.movies.domain.domain.getMovies.GetLatestMoviesUseCase
+import com.mohamed.movies.domain.domain.getMovies.searchSuggestion.GetSearchSuggestionMoviesUseCase
 import com.mohamed.movies.domain.model.Failure
-import com.mohamed.movies.domain.model.MoviesSearchModel
 import com.mohamed.movies.domain.model.Resource
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
 import com.mohamed.movies.ui.model.ProgressTypes
 import com.mohamed.movies.ui.mvi_base.MVIBaseViewModel
+import com.mohamed.movies.utils.alternate
+import com.mohamed.movies.utils.removeLeadingAndExtraSpaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(
     private val getMoviesListUseCase: GetLatestMoviesUseCase,
+    private val getSearchSuggestionMoviesUseCase: GetSearchSuggestionMoviesUseCase,
 ) : MVIBaseViewModel<MoviesViewState, MoviesEvents, MoviesOneTimeAction>() {
 
     private var isLoading = false
@@ -30,26 +33,57 @@ class MoviesViewModel @Inject constructor(
             MoviesEvents.OnPullToRefresh -> fetchMovies(LoadType.PullToRefresh)
             MoviesEvents.OnLoadMoreMovies -> fetchMovies(LoadType.Pagination)
             is MoviesEvents.OnClickMovies -> onMovieClicked(event.movie)
-            is MoviesEvents.OnSearchTextChanged -> onSearchQueryChanged(event.newText)
-            MoviesEvents.OnClickRetry -> {}
+            is MoviesEvents.OnSearchQueryChanged -> onSearchQueryChanged(event.newText)
+            MoviesEvents.OnClickRetry -> fetchMovies(LoadType.Initial)
+            is MoviesEvents.OnSuggestionSelected -> onSuggestionSelected(event.movie)
+            MoviesEvents.OnDismissSearch -> {
+                setState { copy(showSuggestions = false) }
+            }
+
+            is MoviesEvents.OnSearchSubmit -> {
+                setState { copy(showSuggestions = false) }
+            }
+        }
+    }
+
+    private fun onSuggestionSelected(movie: MovieListItem) {
+        setState {
+            copy(
+                searchText = movie.title.alternate(),
+                showSuggestions = false,
+                searchSuggestions = arrayListOf()
+            )
         }
     }
 
     private fun onSearchQueryChanged(query: String) {
-        val trimmedQuery = query.trim()
-        setState {
-            copy(
-                searchText = trimmedQuery,
-                page = 0,
-                canPaginate = true,
-                moviesList = arrayListOf() // Clear list for new search
-            )
-        }
+        val trimmedQuery = query.removeLeadingAndExtraSpaces()
+
+        if (query.isBlank()) {
+            setState {
+                copy(
+                    searchSuggestions = arrayListOf(),
+                    showSuggestions = false,
+                    searchText = "",
+                )
+            }
+            return
+        } else
+            setState {
+                copy(
+                    showSuggestions = true,
+                    searchText = trimmedQuery,
+                    searchSuggestions = searchSuggestions
+                        ?.filter { it.title?.contains(query, ignoreCase = true) == true }
+                        ?.let(::ArrayList) ?: arrayListOf()
+                )
+            }
+
 
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(400L) // Debounce input
-            fetchMovies(LoadType.Initial)
+            fetchSuggestion()
         }
     }
 
@@ -57,6 +91,23 @@ class MoviesViewModel @Inject constructor(
         // Extend for navigation
         // sendOneTimeAction(MoviesOneTimeAction.NavigateToDetails(movie.id))
     }
+
+    private fun fetchSuggestion() {
+        viewModelScope.launch {
+            getSearchSuggestionMoviesUseCase(currentState.searchText).collect { result ->
+                when (result) {
+                    is Resource.Success -> setState {
+                        copy(
+                            searchSuggestions = result.data,
+                        )
+                    }
+
+                    is Resource.Error -> {}
+                }
+            }
+        }
+    }
+
 
     private fun fetchMovies(loadType: LoadType) {
         val state = currentState
@@ -77,7 +128,7 @@ class MoviesViewModel @Inject constructor(
         isLoading = true
 
         viewModelScope.launch {
-            getMoviesListUseCase(buildSearchModel(targetPage)).collect { result ->
+            getMoviesListUseCase(page = targetPage).collect { result ->
                 when (result) {
                     is Resource.Success -> onMoviesLoaded(
                         movies = result.data.movieListItems.orEmpty(),
@@ -91,13 +142,6 @@ class MoviesViewModel @Inject constructor(
                 isLoading = false
             }
         }
-    }
-
-    private fun buildSearchModel(page: Int): MoviesSearchModel {
-        return MoviesSearchModel(
-            page = page,
-            query = currentState.searchText.takeIf { it.isNotBlank() }
-        )
     }
 
     private fun onMoviesLoaded(movies: List<MovieListItem>, page: Int, loadType: LoadType) {

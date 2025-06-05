@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import com.mohamed.movies.domain.model.Failure
 import com.mohamed.movies.ui.model.ProgressTypes
+import com.mohamed.movies.utils.Constants.EXTRA_SPACES_PATTERN
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
@@ -46,4 +47,8 @@ fun LazyListState.OnBottomReached(
             }
     }
 
+}
+
+fun String.removeLeadingAndExtraSpaces(): String {
+    return this.trimStart().replace(Regex(EXTRA_SPACES_PATTERN), " ")
 }

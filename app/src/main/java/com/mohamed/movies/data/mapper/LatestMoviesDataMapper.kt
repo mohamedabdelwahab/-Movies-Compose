@@ -1,7 +1,7 @@
 package com.mohamed.movies.data.mapper
 
 
-import com.mohamed.movies.data.dto.MoviesListResponseDto
+import com.mohamed.movies.data.dto.latestMovies.MoviesListResponseDto
 import com.mohamed.movies.domain.model.moviesResponse.MoviesListResponse
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
 

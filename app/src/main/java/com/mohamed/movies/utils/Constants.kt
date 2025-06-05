@@ -15,6 +15,7 @@ object Constants {
     object NavigationArguments {
         const val MOVIE_DETAILS_ARGUMENT = "movie_details_navigation_argument"
     }
+    const val EXTRA_SPACES_PATTERN = "\\s{2,}"
 
     const val TRANSITION_ANIMATION_DURATION = 900
 

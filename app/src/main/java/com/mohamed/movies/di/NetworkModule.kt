@@ -1,7 +1,7 @@
 package com.mohamed.movies.di
 
 import com.mohamed.movies.BuildConfig
-import com.mohamed.movies.data.remote.MovieAPIInterface
+import com.mohamed.movies.data.retrofit.MovieAPIInterface
 import com.mohamed.movies.utils.Constants
 import dagger.Module
 import dagger.Provides
