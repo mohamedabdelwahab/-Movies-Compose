@@ -1,6 +1,7 @@
 package com.mohamed.movies.domain.repository
 
 import com.mohamed.movies.domain.model.Resource
+import com.mohamed.movies.domain.model.movieDetails.MovieDetailsReposeModel
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
 import com.mohamed.movies.domain.model.moviesResponse.MoviesListResponse
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,9 @@ interface IMoviesRepository {
         query: String,
         language: String
     ): Flow<Resource<ArrayList<MovieListItem>>>
+
+    suspend fun getMovieDetailsById(
+        movieId: Int,
+        language: String
+    ): Flow<Resource<MovieDetailsReposeModel>>
 }

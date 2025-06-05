@@ -1,10 +1,12 @@
 package com.mohamed.movies.data.repositories
 
 import com.mohamed.movies.data.BaseRepository
+import com.mohamed.movies.data.mapper.toMovieDetailsReposeModel
 import com.mohamed.movies.data.mapper.toMovieListItem
 import com.mohamed.movies.data.mapper.toMoviesDomainModel
 import com.mohamed.movies.data.remotedatasource.IMoviesRemoteDataSource
 import com.mohamed.movies.domain.model.Resource
+import com.mohamed.movies.domain.model.movieDetails.MovieDetailsReposeModel
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
 import com.mohamed.movies.domain.model.moviesResponse.MoviesListResponse
 import com.mohamed.movies.domain.repository.IMoviesRepository
@@ -41,6 +43,17 @@ class MoviesRepository @Inject constructor(
                 ?.mapNotNull { it?.toMovieListItem() }
                 ?.let { ArrayList(it) }
                 ?: arrayListOf()
+        }
+    }
+
+    override suspend fun getMovieDetailsById(
+        movieId: Int, language: String
+    ): Flow<Resource<MovieDetailsReposeModel>> {
+        return safeApiCall {
+            moviesRemoteDataSource.getMovieDetailsById(
+                language = language,
+                movieId = movieId
+            ).toMovieDetailsReposeModel()
         }
     }
 

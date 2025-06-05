@@ -1,4 +1,4 @@
-package com.mohamed.movies.domain.domain.getMovies
+package com.mohamed.movies.domain.useCase.getMovies
 
 import com.mohamed.movies.domain.model.Resource
 import com.mohamed.movies.domain.model.moviesResponse.MoviesListResponse

@@ -1,4 +1,4 @@
-package com.mohamed.movies.domain.domain.getMovies.searchSuggestion
+package com.mohamed.movies.domain.useCase.searchSuggestion
 
 import com.mohamed.movies.domain.model.Resource
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem

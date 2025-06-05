@@ -1,0 +1,30 @@
+package com.mohamed.movies.domain.model.movieDetails
+
+data class MovieDetailsReposeModel(
+    val adult: Boolean? = null,
+    val backdrop_path: String? = null,
+    val belongs_to_collection: BelongsToCollectionModel? = null,
+    val budget: Int? = null,
+    val genreModels: List<GenreModel?>? = null,
+    val homepage: String? = null,
+    val id: Int? = null,
+    val imdb_id: String? = null,
+    val origin_country: List<String?>? = null,
+    val original_language: String? = null,
+    val original_title: String? = null,
+    val overview: String? = null,
+    val popularity: Double? = null,
+    val poster_path: String? = null,
+    val production_companies: List<ProductionCompanyModel?>? = null,
+    val production_countries: List<ProductionCountryModel?>? = null,
+    val release_date: String? = null,
+    val revenue: Int? = null,
+    val runtime: Int? = null,
+    val spoken_languages: List<SpokenLanguageModel?>? = null,
+    val status: String? = null,
+    val tagline: String? = null,
+    val title: String? = null,
+    val video: Boolean? = null,
+    val vote_average: Double? = null,
+    val vote_count: Int? = null
+)

@@ -22,13 +22,10 @@ fun NavGraphBuilder.moviesListRoute(navController: NavHostController) {
             moviesViewState = state,
             onEvent = moviesListViewModel::sendEvent,
             moviesOneTimeAction = action,
-            onMovieClick = { serviceId ->
-//                navigateToServiceForm(
-//                    navController = navController,
-//                    serviceId = serviceId.toString(),
-//                    serviceName = serviceName,
-//                    rfiRequestId = requestId.toString()
-//                )
+            onMovieClick = { movie ->
+                navController.navigate(
+                    Screen.MovieDetails.route + "/" + movie.id
+                )
             }
         )
     }

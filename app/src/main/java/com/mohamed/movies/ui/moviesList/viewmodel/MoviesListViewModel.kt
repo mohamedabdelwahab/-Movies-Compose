@@ -1,11 +1,11 @@
 package com.mohamed.movies.ui.moviesList.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.mohamed.movies.domain.domain.getMovies.GetLatestMoviesUseCase
-import com.mohamed.movies.domain.domain.getMovies.searchSuggestion.GetSearchSuggestionMoviesUseCase
 import com.mohamed.movies.domain.model.Failure
 import com.mohamed.movies.domain.model.Resource
 import com.mohamed.movies.domain.model.moviesResponse.MovieListItem
+import com.mohamed.movies.domain.useCase.getMovies.GetLatestMoviesUseCase
+import com.mohamed.movies.domain.useCase.searchSuggestion.GetSearchSuggestionMoviesUseCase
 import com.mohamed.movies.ui.model.ProgressTypes
 import com.mohamed.movies.ui.mvi_base.MVIBaseViewModel
 import com.mohamed.movies.utils.alternate
@@ -88,8 +88,7 @@ class MoviesViewModel @Inject constructor(
     }
 
     private fun onMovieClicked(movie: MovieListItem) {
-        // Extend for navigation
-        // sendOneTimeAction(MoviesOneTimeAction.NavigateToDetails(movie.id))
+        sendOneTimeAction(MoviesOneTimeAction.NavigateToMovieDetails(movie))
     }
 
     private fun fetchSuggestion() {

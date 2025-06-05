@@ -21,7 +21,7 @@ interface MovieAPIInterface {
         @Query("language") language: String
     ): MovieSuggestionsDto
 
-    @GET("movie/{movie_id}")
+    @GET("3/movie/{movie_id}")
     suspend fun getMovieDetailsById(
         @Path("movie_id") movieId: Int,
         @Query("language") language: String

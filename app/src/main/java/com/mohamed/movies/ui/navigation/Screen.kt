@@ -5,6 +5,6 @@ import com.mohamed.movies.utils.Constants.NavigationArguments.MOVIE_DETAILS_ARGU
 
 sealed class Screen(val route: String) {
     data object MovieList : Screen("movieList}")
-    data object EventDetails : Screen("movieDetails/{$MOVIE_DETAILS_ARGUMENT}")
+    data object MovieDetails : Screen("movieDetails")
 
 }
